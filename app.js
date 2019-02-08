@@ -58,6 +58,17 @@ class UI {
     }
   }
 
+  static showAlert(message, className) {
+    const div = document.createElement("div");
+    div.className = `alert alert-${className}`;
+    div.appendChild(document.createTextNode(message));
+    const container = document.querySelector(".container");
+    const form = document.querySelector("#inventory-form");
+    container.insertBefore(div, form);
+    // Remove in 2 seconds
+    setTimeout(() => document.querySelector(".alert").remove(), 2000);
+  }
+
   static clearFields() {
     document.querySelector("#name").value = "";
     document.querySelector("#description").value = "";
@@ -85,17 +96,34 @@ document.querySelector("#inventory-form").addEventListener("submit", e => {
   const date = document.querySelector("#date").value;
   const quantity = document.querySelector("#quantity").value;
 
-  // Instatiate item
-  const item = new Item(name, description, model, department, date, quantity);
+  // Validate form inputs
+  if (
+    name === "" ||
+    description === "" ||
+    model === "" ||
+    department === "" ||
+    date === "" ||
+    quantity === ""
+  ) {
+    UI.showAlert("Please fill in all fields", "danger");
+  } else {
+    // Instatiate item
+    const item = new Item(name, description, model, department, date, quantity);
 
-  // Add Item to UI
-  UI.addItemToInventory(item);
+    // Add Item to UI
+    UI.addItemToInventory(item);
 
-  // Clear fields
-  UI.clearFields();
+    // Show successful submission alert
+    UI.showAlert("Item Added", "success");
+
+    // Clear fields
+    UI.clearFields();
+  }
 });
 
 // Event: Remove an item, w/ event delegation
 document.querySelector("#inventory-log").addEventListener("click", e => {
   UI.deleteItem(e.target);
+  // Show successful submission alert
+  UI.showAlert("Item Removed", "success");
 });
