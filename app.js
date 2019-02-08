@@ -52,6 +52,11 @@ class UI {
 
     log.appendChild(row);
   }
+  static deleteItem(element) {
+    if (element.classList.contains("delete")) {
+      element.parentElement.parentElement.remove();
+    }
+  }
 
   static clearFields() {
     document.querySelector("#name").value = "";
@@ -90,4 +95,7 @@ document.querySelector("#inventory-form").addEventListener("submit", e => {
   UI.clearFields();
 });
 
-// Event: Remove an item
+// Event: Remove an item, w/ event delegation
+document.querySelector("#inventory-log").addEventListener("click", e => {
+  UI.deleteItem(e.target);
+});
